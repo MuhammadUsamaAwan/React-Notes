@@ -378,22 +378,23 @@ export default combineReducers({
 ### rootReducer
 
 ```javascript
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const slice = createSlice({
-  name: "someSlice",
+  name: 'someSlice',
   initialState: {},
   reducers: {
     DO_SOMETHING: (state, action) => {
       return {
         ...state,
         data: action.payload,
-      };
-    }
-});
+      }
+    },
+  },
+})
 
-export const { DO_SOMETHING } = slice.actions;
-export default slice.reducer;
+export const { DO_SOMETHING } = slice.actions
+export default slice.reducer
 ```
 
 ### Action
@@ -411,7 +412,7 @@ export const someAction = data => async dispatch => {
 
 ```javascript
 import { Provider } from 'react-redux'
-import store from '../redux/store'
+import store from './redux/store'
 
 function App() {
   return <Provider store={store}>{/*Other components goes here*/}</Provider>
