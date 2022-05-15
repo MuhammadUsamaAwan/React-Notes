@@ -53,13 +53,13 @@ console.log(spread)
 
 ## Styling in React
 
-### Inline Styling
+### 1. Inline Styling
 
 ```js
 return <label style={{ color: !isValid ? 'red' : 'black' }}>Course Goal</label>
 ```
 
-### Dynamic CSS Class
+### 2. Dynamic CSS Class
 
 ```js
 return (
@@ -67,7 +67,7 @@ return (
 )
 ```
 
-### Styled Components
+### 3. Styled Components
 
 ```
 npm i styled-components
@@ -137,7 +137,7 @@ const theme = {
 ${theme => theme.colors.header}
 ```
 
-### CSS Modules
+### 4. CSS Modules
 
 #### Button.module.css
 
@@ -152,27 +152,6 @@ ${theme => theme.colors.header}
 ```js
 import styles from './Button.module.css'
 return <button classname={styles.button}>Button</button>
-```
-
-<br>
-
-## React Portals
-
-### index.html
-
-```html
-<div id="overlay"></div>
-```
-
-### Model.js
-
-```js
-import ReactDom from 'react-dom'
-
-return ReactDom.createPortal(
-    // your code here
-), document.getElementById('overlay')
-)
 ```
 
 <br>
@@ -282,62 +261,6 @@ export default const useToggle = (defaultValue)  => {
 
 <br>
 
-## Context API
-
-### Context File
-
-```js
-import { createContext, useState } from 'react'
-
-const AnyContext = createContext();
-
-export const AnyProvider = ({ children }) => {
-  const [state, setState] = useState()
-  // any other states
-  // any methods that change any states
-  return (
-    <AnyContext.Provider
-      value={{
-        state,
-        {/* along with other states or methods */}
-      }}
-    >
-      {children}
-    </AnyContext.Provider>
-  )
-}
-```
-
-### App.js
-
-```js
-import { AnyProvider } from './context/AnyContext'
-
-const App = () => {
-  return (
-    <AnyProvider>
-      <Component1 />
-      <Component2 />
-      <Component3 />
-    </AnyProvider>
-  )
-}
-```
-
-### Inside Component
-
-```js
-import { useContext } from 'react'
-import AnyContext from '../context/AnyContext'
-
-const Component = () => {
-  const { state } = useContext(AnyContext)
-  // pullout any other state or methods too
-}
-```
-
-<br>
-
 ## API Request
 
 ### api/axios.js
@@ -405,6 +328,83 @@ const postCall = async () => {
   }
   const res = await PostAPI(url, data)
 }
+```
+
+<br>
+
+## Context API
+
+### Context File
+
+```js
+import { createContext, useState } from 'react'
+
+const AnyContext = createContext();
+
+export const AnyProvider = ({ children }) => {
+  const [state, setState] = useState()
+  // any other states
+  // any methods that change any states
+  return (
+    <AnyContext.Provider
+      value={{
+        state,
+        {/* along with other states or methods */}
+      }}
+    >
+      {children}
+    </AnyContext.Provider>
+  )
+}
+```
+
+### App.js
+
+```js
+import { AnyProvider } from './context/AnyContext'
+
+const App = () => {
+  return (
+    <AnyProvider>
+      <Component1 />
+      <Component2 />
+      <Component3 />
+    </AnyProvider>
+  )
+}
+```
+
+### Inside Component
+
+```js
+import { useContext } from 'react'
+import AnyContext from '../context/AnyContext'
+
+const Component = () => {
+  const { state } = useContext(AnyContext)
+  // pullout any other state or methods too
+}
+```
+
+<br>
+
+## React Portals
+
+### index.html
+
+```html
+<div id="overlay"></div>
+```
+
+### Model.js
+
+```js
+import ReactDom from 'react-dom'
+
+return ReactDom.createPortal(
+    // your code here
+), document.getElementById('overlay')
+)
 ```
 
 <br>
