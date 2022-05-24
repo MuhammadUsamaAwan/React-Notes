@@ -1,6 +1,6 @@
 # React
 
-## JavaScript Refresher
+## Javascript Refresher
 
 ### Array.map()
 
@@ -39,6 +39,15 @@ console.log(find)
 // Output: 3
 ```
 
+### Array.findIndex()
+
+```js
+const arr = [1, 2, 3, 4]
+const find = arr.findIndex(item => item > 2)
+console.log(find)
+// Output: 2
+```
+
 ### Spread Operator
 
 ```js
@@ -64,6 +73,7 @@ return <label style={{ color: !isValid ? 'red' : 'black' }}>Course Goal</label>
 ```js
 return (
   <label classname={{ !isValid ? "invalid" : "valid" }}>Course Goal</label>
+  <label classname={{ !isValid && "invalid" }}>Course Goal</label>
 )
 ```
 
@@ -76,7 +86,7 @@ npm i styled-components
 #### Container.styled.js
 
 ```js
-import styled from "styled-components";
+import styled from 'styled-components'
 export const Container = styled.div`
   padding: ${props => props.variant === 'sm' : '0 20px' ? '0 30px'};
   max-width: 100%;
@@ -156,50 +166,38 @@ return <button classname={styles.button}>Button</button>
 
 <br>
 
+<br>
+
 ## React Hooks
 
-### useEffect()
-
-#### Diable Annoying Dependency Warning
+### useState
 
 ```js
-// eslint-disable-next-line
-```
-
-#### Cleanup
-
-```js
-useEffect(() => {
-  let isMounted = true
-  const controller = new AbortController()
-  //API Call
-  if (isMounted.current) setState(res)
-  return () => {
-    isMounted = false
-    controller.abort()
-  }
-})
-```
-
-### useRef()
-
-```JavaScript
-import { useRef } from 'react'
-
-const Component = () => {
-  const myRef = useRef()
-  const handleClick = () => {
-    myRef.current.innerText = 'WHY??'
-  }
+const [count, setCount] = useState(0)
+const App = () => {
+  const [count, setCount] = useState(0)
   return (
-    <button ref={myRef} onClick={handleClick}>
-      Don't Click
-    </button>
+    <>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </>
   )
 }
 ```
 
-### useReducer()
+### useEffect
+
+```js
+useEffect(() => {
+  // API calls or other stuff
+  return () => {
+    // Clean up
+  }
+}, [dependencies])
+// eslint-disable-next-line = to diable annoying warning
+```
+
+### useReducer
 
 ```js
 const reducer(state, action) {
@@ -223,7 +221,16 @@ const App = () => {
 }
 ```
 
-### useMemo()
+### useCallback
+
+```js
+const showCount = useCallback(() => {
+    alert(`Count ${count}`)
+}. [count])
+// will return a change only if dependencies changes
+```
+
+### useMemo
 
 ```js
 const expensiveCount = useMemo(() => {
@@ -231,21 +238,79 @@ const expensiveCount = useMemo(() => {
 }, [count])
 ```
 
-### useCallback()
+### useRef
 
 ```js
-const showCount = useCallback(() => {
-    alert(`Count ${count}`)
-}. [count])
+const App = () => {
+  const myRef = useRef()
+  const handleClick = () => {
+    myRef.current.innerText = 'WHY??'
+  }
+  return (
+    <button ref={myRef} onClick={handleClick}>
+      Don't Click
+    </button>
+  )
+}
 ```
 
-<br>
+### useTransition
+
+```js
+const App = () => {
+  const [isPending, startTransition] = useTransition()
+  const [count, setCount] = useState(0)
+
+  function handleClick() {
+    startTransition(() => {
+      setCount(c => c + 1)
+    })
+  }
+
+  return (
+    <div>
+      {isPending && <Spinner />}
+      <button onClick={handleClick}>{count}</button>
+    </div>
+  )
+}
+```
+
+### useDeferredValue
+
+```js
+// similar to useTransition but when you have no control over call
+const ProductList => ({ products }) = {
+  const deferredProducts = useDeferredValue(products);
+  return (
+    <ul>
+      {deferredProducts.map((product) => (
+        <li>{product}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### useId
+
+Hook for generating unique IDs. useId is not for generating keys in a list. For multiple IDs in the same component, append a suffix using the same id
+
+```js
+const App = () => {
+  const id = useId()
+  return (
+    <>
+      <label htmlFor={id}>Do you like React?</label>
+      <input id={id} type='checkbox' name='react' />
+    </>
+  )
+}
+```
 
 ### Custom Hooks
 
 ```js
-import { useState } from "react"
-
 export default const useToggle = (defaultValue)  => {
   const [value, setValue] = useState(defaultValue)
 
@@ -261,73 +326,133 @@ export default const useToggle = (defaultValue)  => {
 
 <br>
 
-## API Request
+## React.memo
 
-### api/axios.js
+```js
+const MyComponent = props => {
+  /* render using props */
+}
+const areEqual = (prevProps, nextProps) => {
+  /*
+  return true if passing nextProps to render would return
+  the same result as passing prevProps to render,
+  otherwise return false
+  */
+}
+export default React.memo(MyComponent, areEqual)
+```
+
+<br>
+
+## React Portals
+
+### index.html
+
+```html
+<div id="overlay"></div>
+```
+
+### Model.js
+
+```js
+import ReactDom from 'react-dom'
+
+return (
+  ReactDom
+    .createPortal
+    // your code here
+    (),
+  document.getElementById('overlay')
+)
+```
+
+<br>
+
+## API Calls
+
+### Axios Instance
 
 ```js
 import axios from 'axios'
+const BASE_URL = 'https://icanhazdadjoke.com'
 
 export default axios.create({
-  baseURL: 'http://localhost:3500',
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 ```
 
-### GetAPI
+### useAxios Custom Hook
 
 ```js
-import axios from './api/axios'
-import { baseURL } from '../config'
+import { useState, useEffect } from 'react'
 
-export const GetAPI = async url => {
-  try {
-    const res = await axios({
-      method: 'get',
-      url,
-      withCredentials: true,
-    })
-    return res
-  } catch (err) {
-    console.error(err)
-  }
-}
-```
+const useAxios = configObj => {
+  const { axiosInstance, method, url, requestConfig = {} } = configObj
 
-### PostAPI
+  const [response, setResponse] = useState([])
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [reload, setReload] = useState(0)
 
-```js
-import axios from './api/axios'
-import { baseURL } from '../config'
+  const refetch = () => setReload(prev => prev + 1)
 
-export const PostAPI = async (url, data) => {
-  try {
-    const res = await axios({
-      method: 'post',
-      url,
-      data,
-      headers: {
-        Authorization: Auth,
-        'Content-Type': 'application/json',
+  useEffect(() => {
+    const controller = new AbortController()
+
+    const fetchData = async () => {
+      try {
+        const res = await axiosInstance[method.toLowerCase()](url, {
+          ...requestConfig,
+          signal: controller.signal,
+        })
+        setResponse(res.data)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
       }
-      withCredentials: true
-    })
-    return res
-  } catch (err) {
-    console.error(err)
-  }
+    }
+
+    fetchData()
+
+    return () => controller.abort()
+
+    // eslint-disable-next-line
+  }, [reload])
+
+  return [response, error, loading, refetch]
 }
+
+export default useAxios
 ```
 
-### API Call Example
+### Inside Component
 
 ```js
-const postCall = async () => {
-  const url = '/someEndpoint'
-  const data = {
-    name: 'someName',
-  }
-  const res = await PostAPI(url, data)
-}
+import useAxios from '../hooks/useAxios'
+import axios from '../apis/axios'
+
+const [joke, error, loading, refetch] = useAxios({
+  axiosInstance: axios,
+  method: 'GET',
+  url: '/',
+})
+
+const [joke, error, loading, refetch] = useAxios({
+  axiosInstance: axios,
+  method: 'GET',
+  url: '/',
+  requestConfig: {
+    data: {
+      someData, // for post request
+    },
+  },
+})
+
+// for refetch simply call refetch()
 ```
 
 <br>
@@ -356,6 +481,8 @@ export const AnyProvider = ({ children }) => {
     </AnyContext.Provider>
   )
 }
+
+export default AnyContext
 ```
 
 ### App.js
@@ -384,27 +511,6 @@ const Component = () => {
   const { state } = useContext(AnyContext)
   // pullout any other state or methods too
 }
-```
-
-<br>
-
-## React Portals
-
-### index.html
-
-```html
-<div id="overlay"></div>
-```
-
-### Model.js
-
-```js
-import ReactDom from 'react-dom'
-
-return ReactDom.createPortal(
-    // your code here
-), document.getElementById('overlay')
-)
 ```
 
 <br>
@@ -549,9 +655,7 @@ return (
 ```js
     import { Link } from 'react-router-dom'
 
-
     return (
-
         // simple
         <Link to='/'>Home</Link>
 
@@ -564,7 +668,7 @@ return (
             }}
 
         >
-
+        About
         </Link>
     )
 ```
@@ -613,14 +717,11 @@ const Post = () => {
   const handleClick = () => Navigate('/about')
 
   // navigate to where they came from
-  // useful for successful login
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
   navigate(from, { replace: true })
   // another way
   const goBack = () => navigate(-1)
-
-  return <Button onClick={handleClick}>Click Me</Button>
 }
 ```
 
