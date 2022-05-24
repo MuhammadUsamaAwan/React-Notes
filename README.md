@@ -166,8 +166,6 @@ return <button classname={styles.button}>Button</button>
 
 <br>
 
-<br>
-
 ## React Hooks
 
 ### useState
@@ -409,6 +407,7 @@ const useAxios = configObj => {
           signal: controller.signal,
         })
         setResponse(res.data)
+        setError('') // for react 18
       } catch (err) {
         setError(err.message)
       } finally {
