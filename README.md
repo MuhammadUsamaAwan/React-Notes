@@ -463,39 +463,33 @@ const [joke, error, loading, refetch] = useAxios({
 ```js
 import { createContext, useState } from 'react'
 
-const AnyContext = createContext();
+const AuthContext = createContext({})
 
-export const AnyProvider = ({ children }) => {
-  const [state, setState] = useState()
-  // any other states
-  // any methods that change any states
+export const AuthProvider = ({ children }) => {
+  const [auth, setAuth] = useState({})
+
   return (
-    <AnyContext.Provider
-      value={{
-        state,
-        {/* along with other states or methods */}
-      }}
-    >
+    <AuthContext.Provider value={{ auth, setAuth }}>
       {children}
-    </AnyContext.Provider>
+    </AuthContext.Provider>
   )
 }
 
-export default AnyContext
+export default AuthContext
 ```
 
 ### App.js
 
 ```js
-import { AnyProvider } from './context/AnyContext'
+import AuthProvider from './context/AuthProvider'
 
 const App = () => {
   return (
-    <AnyProvider>
+    <AuthProvider>
       <Component1 />
       <Component2 />
       <Component3 />
-    </AnyProvider>
+    </AuthProvider>
   )
 }
 ```
@@ -504,10 +498,10 @@ const App = () => {
 
 ```js
 import { useContext } from 'react'
-import AnyContext from '../context/AnyContext'
+import { AuthContext } from '../context/AuthProvider'
 
 const Component = () => {
-  const { state } = useContext(AnyContext)
+  const { state } = useContext(AuthContext)
   // pullout any other state or methods too
 }
 ```
@@ -608,11 +602,10 @@ return (
   <Router>
     <Routes>
       {/* single component*/}
-      <Route exact path="/" element={<Component />} />
+      <Route  path="/" element={<Component />} />
 
       {/* multiple components*/}
       <Route
-        exact
         path="/about"
         element={
           <>
@@ -642,7 +635,7 @@ return (
   <Suspense fallback={<LoadingSpinner />}>
     <Router>
       <Routes>
-        <Route exact path='/' element={<Component />} />
+        <Route path='/' element={<Component />} />
       </Routes>
     </Router>
   </Suspense>
@@ -677,7 +670,14 @@ return (
 ```js
 import { NavLink } from 'react-router-dom'
 
-return <NavLink to='/' activeClassName='active'></NavLink>
+return (
+  <NavLink
+    to='messages'
+    style={({ isActive }) => (isActive ? 'underline' : undefined)}
+  >
+    Messages
+  </NavLink>
+)
 ```
 
 ### Using Params
